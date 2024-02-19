@@ -19,6 +19,17 @@ RUN set -eux; \
 	echo -e '#!/bin/sh\ncd $SABNZBD_PATH && exec ./SABnzbd.py "$@"' > /usr/local/bin/sabnzbd; \
 	chmod 755 /usr/local/bin/sabnzbd
 
+RUN set -eux; \
+	RELEASE_SRC_URL=$(\
+		wget -qO - https://api.github.com/repos/animetosho/par2cmdline-turbo/releases/latest \
+			| grep -e 'browser_download_url.*linux-amd64\.xz' \
+			| cut -d '"' -f 4 \
+		); \
+	apk add --no-cache xz -t .extract-deps; \
+	wget -qO - ${RELEASE_SRC_URL} | xz -d > /usr/local/bin/par2; \
+	chmod 755 /usr/local/bin/par2; \
+	apk del --no-cache .extract-deps
+
 COPY --from=ghcr.io/linuxserver/unrar /usr/bin/unrar-alpine /usr/local/bin/unrar
 RUN apk add --no-cache 7zip
 
