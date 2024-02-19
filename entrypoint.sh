@@ -1,9 +1,11 @@
 #!/bin/sh
 set -eu
 
-if [ -n "${1+x}" ] && [ "${1}" = "${1##-*}" ]; then
+if [ -n "${1:-}" ] && [ "${1}" = "${1##-*}" ] && [ "$1" != "sabnzbd" ]; then
 	exec "$@"
 fi
+
+[ "${1:-}" == "sabnzbd" ] && shift
 
 exec sabnzbd \
 	--config-file /config/sabnzbd.ini \
