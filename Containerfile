@@ -19,6 +19,8 @@ RUN set -eux; \
 	echo -e '#!/bin/sh\ncd $SABNZBD_PATH && exec ./SABnzbd.py "$@"' > /usr/local/bin/sabnzbd; \
 	chmod 755 /usr/local/bin/sabnzbd
 
+COPY --from=ghcr.io/linuxserver/unrar /usr/bin/unrar-alpine /usr/local/bin/unrar
+RUN apk add --no-cache 7zip
 
 COPY entrypoint.sh /
 
